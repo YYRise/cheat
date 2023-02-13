@@ -24,7 +24,12 @@ ZIP    := zip -m
 docker_image := cheat-devel:latest
 
 # build flags
-BUILD_FLAGS  := -ldflags="-s -w" -mod vendor -trimpath
+# ldflags:
+	#-w 去掉调试信息
+    #-s 去掉符号表
+    #-X 注入变量, 编译时赋值
+#BUILD_FLAGS  := -ldflags="-s -w" -mod vendor -trimpath
+BUILD_FLAGS  := -ldflags="-s -w" -trimpath
 GOBIN        :=
 TMPDIR       := /tmp
 
@@ -128,7 +133,7 @@ install: build
 ## clean: remove compiled executables
 .PHONY: clean
 clean:
-	$(RM) -f $(dist_dir)/* $(cmd_dir)/str_config.go $(cmd_dir)/str_usage.go
+	#$(RM) -f $(dist_dir)/* $(cmd_dir)/str_config.go $(cmd_dir)/str_usage.go
 
 ## distclean: remove the tags file
 .PHONY: distclean
@@ -160,11 +165,11 @@ man:
 ## vendor: download, tidy, and verify dependencies
 .PHONY: vendor
 vendor:
-	$(GO) mod vendor && $(GO) mod tidy && $(GO) mod verify
+	#$(GO) mod vendor && $(GO) mod tidy && $(GO) mod verify
 
 ## vendor-update: update vendored dependencies
 vendor-update:
-	$(GO) get -t -u ./... && $(GO) mod vendor && $(GO) mod tidy && $(GO) mod verify
+	#$(GO) get -t -u ./... && $(GO) mod vendor && $(GO) mod tidy && $(GO) mod verify
 
 ## fmt: run go fmt
 .PHONY: fmt

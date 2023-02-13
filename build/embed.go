@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// get the project root
-	root, err := filepath.Abs(cwd + "../../../")
+	root, err := filepath.Abs(cwd + "../../")
 	if err != nil {
 		log.Fatal(err)
 	}
