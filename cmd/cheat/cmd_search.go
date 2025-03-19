@@ -37,7 +37,6 @@ func cmdSearch(opts map[string]interface{}, conf config.Config) {
 
 		// sort the cheatsheets alphabetically, and search for matches
 		for _, sheet := range sheets.Sort(pathcheats) {
-
 			// if <cheatsheet> was provided, constrain the search only to
 			// matching cheatsheets
 			if opts["<cheatsheet>"] != nil && sheet.Title != opts["<cheatsheet>"] {

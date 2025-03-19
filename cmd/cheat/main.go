@@ -26,7 +26,7 @@ func main() {
 		// panic here, because this should never happen
 		panic(fmt.Errorf("docopt failed to parse: %v", err))
 	}
-
+	fmt.Println(opts)
 	// if --init was passed, we don't want to attempt to load a config file.
 	// Instead, just execute cmd_init and exit
 	if opts["--init"] != nil && opts["--init"] == true {
@@ -36,6 +36,7 @@ func main() {
 
 	// get the user's home directory
 	home, err := homedir.Dir()
+	fmt.Println("--home = ", home)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to get user home directory: %v\n", err)
 		os.Exit(1)
@@ -43,16 +44,22 @@ func main() {
 
 	// read the envvars into a map of strings
 	envvars := map[string]string{}
+	//fmt.Println("--envvars = ", os.Environ())
 	for _, e := range os.Environ() {
 		pair := strings.SplitN(e, "=", 2)
 		if runtime.GOOS == "windows" {
 			pair[0] = strings.ToUpper(pair[0])
 		}
+		if pair[0] == "CHEAT_CONFIG_PATH" {
+			fmt.Println("--pair = ", pair)
+		}
 		envvars[pair[0]] = pair[1]
 	}
+	//fmt.Println("--***envvars = ", envvars)
 
 	// identify the os-specifc paths at which configs may be located
 	confpaths, err := config.Paths(runtime.GOOS, home, envvars)
+	fmt.Println("--confpaths = ", confpaths)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load config: %v\n", err)
 		os.Exit(1)
@@ -60,6 +67,7 @@ func main() {
 
 	// search for the config file in the above paths
 	confpath, err := config.Path(confpaths)
+	fmt.Println("--**confpath = ", confpath)
 	if err != nil {
 		// prompt the user to create a config file
 		yes, err := installer.Prompt(
@@ -118,7 +126,7 @@ func main() {
 
 	// determine which command to execute
 	var cmd func(map[string]interface{}, config.Config)
-
+	fmt.Println("opts = ", opts)
 	switch {
 	case opts["--conf"].(bool):
 		cmd = cmdConf
